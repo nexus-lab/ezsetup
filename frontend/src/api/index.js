@@ -1,15 +1,6 @@
 import store from '@/store'
 
-let API_SERVER
-
-switch (process.env.NODE_ENV) {
-  case 'development':
-    API_SERVER = 'http://127.0.0.1:5000'
-    break
-  case 'production':
-    API_SERVER = location.protocol + '//' + location.hostname + ':5002'
-    break
-}
+let API_SERVER = process.env.API_SERVER
 
 function authHeaders () {
   return {

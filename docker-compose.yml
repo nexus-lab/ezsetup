@@ -15,6 +15,7 @@ services:
             - REDIS_HOST
             - REDIS_PORT
             - REDIS_TOKEN_DB
+            - REDIS_JOBS_DB
             - SENTRY_DSN
         volumes:
             - ./api:/src
