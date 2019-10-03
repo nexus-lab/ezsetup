@@ -1,62 +1,47 @@
-version: '2'
+version: "3.7"
 
 services:
     api:
-        image: python:3.6
-        working_dir: /src
-        environment:
-            - PIPENV_VENV_IN_PROJECT=true
-            - POSTGRES_USER
-            - POSTGRES_PASSWORD
-            - POSTGRES_HOST
-            - POSTGRES_PORT
-            - POSTGRES_POOL_MIN_CONN
-            - POSTGRES_POOL_MAX_CONN
-            - REDIS_HOST
-            - REDIS_PORT
-            - REDIS_TOKEN_DB
-            - REDIS_JOBS_DB
-            - SENTRY_DSN
-            - EZSETUP_ROOT_USER
-            - EZSETUP_ROOT_EMAIL
-            - EZSETUP_ROOT_PASSWORD
-        volumes:
-            - ./api:/src
-        command: >
-            bash -c "pip install pipenv && (pipenv --venv > /dev/null 2>&1 || pipenv --python 3.6) &&
-            pipenv install && pipenv run python create_root.py && pipenv run python app.py"
+        build: ./api
+        image: ezsetup_api:latest
+        env_file: .env
         ports:
-            - '5002:5000'
+            - "5002:5000"
         depends_on:
             - database
             - cache
         restart: always
-    frontend:
-        image: node:8
-        working_dir: /src
-        environment:
-            - API_SERVER
-        volumes:
-          - ./frontend:/src
-        command: bash -c "npm install && npm run dev"
-        ports:
-            - '80:8080'
+    worker:
+        build:
+            context: ./api
+            dockerfile: Dockerfile.worker
+        image: ezsetup_worker:latest
+        env_file: .env
         depends_on:
-          - api
+            - cache
+        restart: always
+    frontend:
+        build: ./frontend
+        image: ezsetup_frontend:latest
+        env_file: .env
+        ports:
+            - "80:8080"
+        depends_on:
+            - api
         restart: always
     cache:
         image: redis:3.2
+        env_file: .env
         ports:
-            - '${REDIS_PORT}:6379'
+            - "${REDIS_PORT}:6379"
         restart: always
     database:
         image: postgres:9.6
-        ports:
-            - '${POSTGRES_PORT}:5432'
+        env_file: .env
         environment:
-            - POSTGRES_USER
-            - POSTGRES_PASSWORD
             - PGDATA=/var/lib/postgresql/data/ezsetup
+        ports:
+            - "${POSTGRES_PORT}:5432"
         volumes:
             - ./.pgdata:/var/lib/postgresql/data/ezsetup
             - ./api/database/migrations:/docker-entrypoint-initdb.d

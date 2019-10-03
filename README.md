@@ -44,11 +44,7 @@ the symlink error);
 ## With Docker
 
 1. Install Docker and docker-compose;
-2. Copy `.env.example` file to `.env` and fill in necessary fields, and load environment variables by:
-
-    ```bash
-    source .env
-    ```
+2. Copy `.env.example` file to `.env` and fill in necessary fields.
 3. Run `docker-compose up` from your project directory to bring up services. To execute tests, run
 
     ```bash
