@@ -1,27 +1,26 @@
-[![CircleCI](https://circleci.com/gh/ezsetup/ezsetup.svg?style=svg)](https://circleci.com/gh/ezsetup/ezsetup)
-
-# ezsetup
-
 ## Introduction
 
 <!-- TODO: Describe what is ezsetup. Better have a logo. -->
 
-## Dev Installation
+## Installation
 
 ### From Source
 
 1. Install dependencies:
-    - Python >= 3.6
+    - Python == 3.6
     - Node >= 8.0
     - GNU make
     - PostgreSQL >= 9.6
     - Redis >= 3.2
     - pipenv
+
 2. Copy `.env.example` file to `.env` and fill in necessary fields, and load environment variables by:
 
     ```bash
-    source .env
+    export $(cat .env | xargs)
     ```
+    The `API_SERVER` here points to the public address of the EZSetup API service with port number, e.g., `http://127.0.0.1:5002`
+
 3. Initialize database using migration files under `api/database/migrations`
 
     ```bash
@@ -29,27 +28,28 @@
     sudo su postgres -c "createdb ${POSTGRES_USER}"
     sudo su postgres -c "cat api/database/migrations/*.sql | psql -d ${POSTGRES_USER}"
     ```
-4. Run `make install` to install requirements for the `frontend` and `api` projects;
-5. Run `make run-worker` to start a redis-queue worker
-6. Run `make run-api` to start the `api` server, or `make run-frontend` to start the `frontend` server. Run `make test` 
-to execute tests.
 
-## With Vagrant
+4. Install requirements for the `frontend` and `api` projects
 
-1. Install VirtualBox and Vagrant;
-2. Copy `.env.example` file to `.env` and fill in necessary fields;
-3. Run `vagrant up` from your project root directory (Windows users need to run this command as administrator to avoid 
-the symlink error);
+    ```bash
+    make install
+    ```
+
+5. Start a redis-queue worker, the API service, and the frontend service using
+
+    ```bash
+    make run-worker
+    make run-api
+    make run-frontend
+    ```
 
 ## With Docker
 
 1. Install Docker and docker-compose;
-2. Copy `.env.example` file to `.env` and fill in necessary fields.
-3. Run `docker-compose up` from your project directory to bring up services. To execute tests, run
-
-    ```bash
-    docker-compose -f docker-compose.test.yml up --abort-on-container-exit
-    ```
+2. Copy `.env.example` file to `.env` and fill in necessary fields as described in step 2 of the [source code installation](#from-source).
+3. Run `docker-compose up` from your project directory to bring up services.
+4. To update the containers to have the lastest EZSetup source code, stop the containers using `docker-compose down`, 
+and then rebuild and restart the containers using `docker-compose up --force-recreate --build`
 
 ## Contributing
 
@@ -63,6 +63,3 @@ the symlink error);
 - **API Style**: [GitHub API v3](https://developer.github.com/v3/)
 - **Git Commit Style**: [AngularJS Git Commit Message Conventions](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit)
 - **Veriosning**: [Semantic Versioning 2.0.0](https://semver.org/)
-
-#### For the UALR internal version only
-Code for the UALR internal only can only be pushed to the branch "UALR-INTERNAL-ONLY"
