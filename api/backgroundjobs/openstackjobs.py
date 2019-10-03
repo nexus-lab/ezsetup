@@ -36,9 +36,9 @@ def delete_sec_group(cloudconfig: CloudConfig, lab_id, lab_slice: Slice):
         openstack = Openstack(
             cloudconfig.detail['openstackAuthURL'], cloudconfig.detail['openstackProject'],
             cloudconfig.detail['openstackUser'], cloudconfig.detail['openstackPassword'])
-        if lab_slice.cloud_attrs.get('sec_group_id') is not None:
+        if lab_slice.cloud_attrs.value.get('sec_group_id') is not None:
             openstack.delete_security_group(
-                lab_slice.name)
+                lab_slice.cloud_attrs.value.get('sec_group_id'))
     except Exception as ex:
         error_type = 'Delete security group error'
         error_msgs = [error_type + ': ' + str(ex)]
