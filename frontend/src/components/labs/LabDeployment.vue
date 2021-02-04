@@ -132,7 +132,7 @@
         lab: null,
         cloudConfigId: null,
         cloudProvider: 'Openstack',
-        openstackAuthURL: 'http://keystone.maas:5000/v2.0', // TODO: change me to null
+        openstackAuthURL: null,
         openstackUser: null,
         openstackPassword: null,
         openstackProject: null,
