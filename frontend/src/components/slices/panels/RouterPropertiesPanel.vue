@@ -17,7 +17,7 @@
       <div class="field" v-if="router.configurations && router.configurations.map(el => el.name).includes('Enable password authentication')">
         <label class="label">Username</label>
         <div class="control">
-          <p>{{ router.password && router.password.trim() ? 'Ubuntu' : '(Unknown)' }}</p>
+          <p>{{ router.password && router.password.trim() ? 'ubuntu' : '(Unknown)' }}</p>
         </div>
       </div>
       <div class="field" v-if="router.configurations && router.configurations.map(el => el.name).includes('Enable password authentication')">
